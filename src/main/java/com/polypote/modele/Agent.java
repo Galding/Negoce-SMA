@@ -25,7 +25,7 @@ public abstract class Agent extends Thread {
     protected String agentName;
     private double startPrice;
     private Date maxDate;
-    private int submissionCounter = 0;
+    private int submissionCounter;
 
     public void addMessage(Message message) {
         this.messages.add(message);
@@ -76,7 +76,7 @@ public abstract class Agent extends Thread {
         } else if (checkOfferLimit(currentOffer)) {
             acceptOffer(currentMessage, currentOffer);
             this.currentNegotiation.getOffers().keySet().stream().filter(agent -> !agentName.equals(agent.getAgentName())).forEach(agent -> {
-                Message.builder().receiver(agent).sender(this).messageType(REJECTED).build();
+                Message.builder().receiver(agent).sender(this).messageType(REJECTED).build().send();
             });
 
         } else {
