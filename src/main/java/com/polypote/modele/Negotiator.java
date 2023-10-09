@@ -1,18 +1,21 @@
 package com.polypote.modele;
 
+import com.polypote.Negotiation;
 import lombok.Builder;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
 
-public class Negotiatior extends Agent {
+public class Negotiator extends Agent {
 
     private Map<Integer, Double> companyPreferences;
 
     @Builder
-    public Negotiatior(double priceLimit, double startPrice, Date maxDate, int submissionCounter) {
-        super(priceLimit, startPrice, maxDate, submissionCounter);
+    public Negotiator(double priceLimit, double startPrice, Date maxDate, int submissionCounter, Negotiation negotiation, String name) {
+        super(priceLimit, negotiation, name, startPrice, maxDate, submissionCounter);
+        negotiation.getOffers().put(name, new ArrayList<>());
     }
 
 

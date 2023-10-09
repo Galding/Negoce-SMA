@@ -1,5 +1,6 @@
 package com.polypote.modele;
 
+import com.polypote.Negotiation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,6 +19,8 @@ public abstract class Agent extends Thread {
     private final Queue<Message> messages = new LinkedList<>();
     private final ReentrantLock lock = new ReentrantLock();
     protected double priceLimit;
+    protected Negotiation currentNegotiation;
+    protected String agentName;
     private double startPrice;
     private Date maxDate;
     private int submissionCounter = 0;
@@ -27,14 +30,11 @@ public abstract class Agent extends Thread {
     }
 
     public boolean processMessage() {
-        lock.lock();
         while (messages.peek() == null) ;
         Message currentMessage = messages.poll();
         switch (currentMessage.getMessageType()) {
             case NEGOTIATING:
-                processOffer(currentMessage);
-                lock.unlock();
-                return true;
+                return processOffer(currentMessage);
             case ACCEPTED:
                 System.out.println("Offer accepted with price " + currentMessage.getOffer());
                 break;
@@ -42,7 +42,6 @@ public abstract class Agent extends Thread {
                 System.out.println("Offer rejected");
                 break;
         }
-        lock.unlock();
         return false;
     }
 
@@ -57,7 +56,7 @@ public abstract class Agent extends Thread {
         }
     }
 
-    private void processOffer(Message currentMessage) {
+    private boolean processOffer(Message currentMessage) {
         double currentOffer = currentMessage.getOffer();
         double nextOffer = growth(currentOffer);
         if (submissionCounter <= submissionFrequency() && checkOfferLimit(nextOffer)) {
@@ -69,14 +68,16 @@ public abstract class Agent extends Thread {
                     .messageType(NEGOTIATING)
                     .build()
                     .send();
+            currentNegotiation.addOfferToNegociationHistory(nextOffer, this);
             submissionCounter++;
-
+            return true;
         } else if (checkOfferLimit(currentOffer)) {
             acceptOffer(currentMessage, currentOffer);
 
         } else {
             rejectOffer(currentMessage);
         }
+        return false;
     }
 
     private void acceptOffer(Message currentMessage, double currentOffer) {
