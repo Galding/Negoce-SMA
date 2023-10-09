@@ -76,7 +76,7 @@ public abstract class Agent extends Thread {
         } else if (checkOfferLimit(currentOffer)) {
             acceptOffer(currentMessage, currentOffer);
             this.currentNegotiation.getOffers().keySet().stream().filter(agent -> !agentName.equals(agent.getAgentName())).forEach(agent -> {
-                Message.builder().receiver(agent).sender(this).messageType(REJECTED).build();
+                Message.builder().receiver(agent).sender(this).messageType(REJECTED).build().send();
             });
 
         } else {
