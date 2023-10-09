@@ -18,6 +18,12 @@ public class App {
                 .negotiation(negotiation)
                 .name("Negotiator")
                 .build();
+        var negotiator2 = Negotiator.builder()
+                .startPrice(200)
+                .priceLimit(580)
+                .negotiation(negotiation)
+                .name("Negotiator2")
+                .build();
         var supplier = Supplier.builder()
                 .startPrice(600)
                 .priceLimit(300)
@@ -35,7 +41,18 @@ public class App {
         negotiator.start();
         Thread.sleep(1000);
         supplier.start();
+        Thread.sleep(1000);
+        Message.builder()
+                .sender(supplier)
+                .receiver(negotiator2)
+                .messageType(NEGOTIATING)
+                .offer(supplier.getStartPrice())
+                .build()
+                .send();
+        negotiator2.start();
+
         negotiator.join();
+        negotiator2.join();
         supplier.join();
         System.out.println("Negotiation history " + negotiation);
     }

@@ -4,21 +4,23 @@ import com.polypote.Negotiation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static com.polypote.modele.MessageType.*;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = "currentNegotiation")
 @Data
 @AllArgsConstructor
 public abstract class Agent extends Thread {
-    private final Queue<Message> messages = new LinkedList<>();
+    private final BlockingDeque<Message> messages = new LinkedBlockingDeque<>();
     private final ReentrantLock lock = new ReentrantLock();
     protected double priceLimit;
+    @ToString.Exclude
     protected Negotiation currentNegotiation;
     protected String agentName;
     private double startPrice;
@@ -68,11 +70,14 @@ public abstract class Agent extends Thread {
                     .messageType(NEGOTIATING)
                     .build()
                     .send();
-            currentNegotiation.addOfferToNegociationHistory(nextOffer, this);
+            currentNegotiation.addOfferToNegotiationHistory(nextOffer, this);
             submissionCounter++;
             return true;
         } else if (checkOfferLimit(currentOffer)) {
             acceptOffer(currentMessage, currentOffer);
+            this.currentNegotiation.getOffers().keySet().stream().filter(agent -> !agentName.equals(agent.getAgentName())).forEach(agent -> {
+                Message.builder().receiver(agent).sender(this).messageType(REJECTED).build();
+            });
 
         } else {
             rejectOffer(currentMessage);

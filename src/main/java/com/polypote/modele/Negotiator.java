@@ -15,7 +15,7 @@ public class Negotiator extends Agent {
     @Builder
     public Negotiator(double priceLimit, double startPrice, Date maxDate, int submissionCounter, Negotiation negotiation, String name) {
         super(priceLimit, negotiation, name, startPrice, maxDate, submissionCounter);
-        negotiation.getOffers().put(name, new ArrayList<>());
+        negotiation.getOffers().put(this, new ArrayList<>());
     }
 
 
@@ -36,6 +36,6 @@ public class Negotiator extends Agent {
 
     @Override
     public String toString() {
-        return "Negotiatior";
+        return this.agentName;
     }
 }

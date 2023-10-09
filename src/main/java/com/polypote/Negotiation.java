@@ -1,6 +1,7 @@
 package com.polypote;
 
 import com.polypote.modele.Agent;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 import java.sql.Timestamp;
@@ -9,12 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 @Value
+@EqualsAndHashCode
 public class Negotiation {
     Timestamp startDate = new Timestamp(System.currentTimeMillis());
-    Map<String, List<Double>> offers = new HashMap<>();
+    Map<Agent, List<Double>> offers = new HashMap<>();
 
-    public void addOfferToNegociationHistory(double nextOffer, Agent agent) {
-        getOffers().get(agent.getAgentName()).add(nextOffer);
+    public void addOfferToNegotiationHistory(double nextOffer, Agent agent) {
+        offers.entrySet().stream().filter(entry -> entry.getKey().equals(agent)).forEach(entry -> entry.getValue().add(nextOffer));
     }
 
     @Override
