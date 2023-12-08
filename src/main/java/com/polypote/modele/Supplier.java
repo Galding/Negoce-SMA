@@ -1,6 +1,7 @@
 package com.polypote.modele;
 
 import com.polypote.Negotiation;
+import com.polypote.strategy.HistoryStrategy;
 import lombok.Builder;
 
 import java.util.ArrayList;
@@ -27,7 +28,8 @@ public class Supplier extends Agent {
 
     @Override
     public double growth(double offer) {
-        return Math.round(offer * 1.1 * 100d) / 100d;
+        return new HistoryStrategy(true, currentNegotiation, priceLimit, getStartPrice(), getMaxDate(), offer, 2).createOffer();
+//        return Math.round(offer * 1.1 * 100d) / 100d;
     }
 
     @Override

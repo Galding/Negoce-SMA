@@ -13,24 +13,26 @@ public class App {
     public static void main(String[] args) throws InterruptedException {
         var negotiation = new Negotiation();
         var negotiator = Negotiator.builder()
-                .startPrice(200)
-                .priceLimit(580)
+                .startPrice(50)
+                .priceLimit(54)
                 .negotiation(negotiation)
                 .name("Negotiator")
                 .build();
         var negotiator2 = Negotiator.builder()
-                .startPrice(200)
-                .priceLimit(580)
+                .startPrice(50)
+                .priceLimit(52)
                 .negotiation(negotiation)
                 .name("Negotiator2")
                 .build();
         var supplier = Supplier.builder()
-                .startPrice(600)
-                .priceLimit(300)
+                .startPrice(60)
+                .priceLimit(50)
                 .negotiation(negotiation)
                 .name("Supplier")
                 .build();
-
+        negotiation.addOfferToNegotiationHistory(supplier.getStartPrice(), supplier);
+       /* negotiation.addOfferToNegotiationHistory(negotiator.getStartPrice(), negotiator);
+        negotiation.addOfferToNegotiationHistory(negotiator2.getStartPrice(), negotiator2);*/
         Message.builder()
                 .sender(supplier)
                 .receiver(negotiator)

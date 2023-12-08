@@ -9,6 +9,7 @@ import lombok.ToString;
 import java.util.Date;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static com.polypote.modele.MessageType.*;
@@ -19,6 +20,7 @@ import static com.polypote.modele.MessageType.*;
 public abstract class Agent extends Thread {
     private final BlockingDeque<Message> messages = new LinkedBlockingDeque<>();
     private final ReentrantLock lock = new ReentrantLock();
+    private final AtomicBoolean isFirstOffer = new AtomicBoolean(true);
     protected double priceLimit;
     @ToString.Exclude
     protected Negotiation currentNegotiation;
@@ -60,6 +62,19 @@ public abstract class Agent extends Thread {
 
     private boolean processOffer(Message currentMessage) {
         double currentOffer = currentMessage.getOffer();
+        if (isFirstOffer.get() && this instanceof Negotiator) {
+            System.out.printf("[FIRST OFFER] %s : Got offer from %s with offer %s sent to %s with offer %s \n", currentMessage.getReceiver(), currentMessage.getSender(), currentOffer, currentMessage.getSender(), startPrice);
+            isFirstOffer.set(false);
+            Message.builder()
+                    .offer(startPrice)
+                    .messageType(NEGOTIATING)
+                    .sender(this)
+                    .receiver(currentMessage.getSender())
+                    .build()
+                    .send();
+            currentNegotiation.addOfferToNegotiationHistory(startPrice, this);
+            return true;
+        }
         double nextOffer = growth(currentOffer);
         if (submissionCounter <= submissionFrequency() && checkOfferLimit(nextOffer)) {
             System.out.printf("%s : Got offer from %s with offer %s sent to %s with offer %s \n", currentMessage.getReceiver(), currentMessage.getSender(), currentOffer, currentMessage.getSender(), nextOffer);
