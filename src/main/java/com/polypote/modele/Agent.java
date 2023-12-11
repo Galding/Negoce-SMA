@@ -1,8 +1,6 @@
 package com.polypote.modele;
 
 import com.polypote.Negotiation;
-import com.polypote.strategy.SplitPearStrategy;
-import com.polypote.strategy.Strategy;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -48,7 +46,7 @@ public abstract class Agent extends Thread {
                 System.out.println("Offer accepted with price " + currentMessage.getOffer());
                 break;
             case REJECTED:
-                System.out.println("Offer rejected");
+                System.out.println(agentName + " Offer rejected");
                 break;
         }
         return false;
@@ -127,8 +125,8 @@ public abstract class Agent extends Thread {
                 .send();
     }
 
-    protected double getMyLastOffer(){
-        return 0.0;
+    protected double getMyLastOffer() {
+        return currentNegotiation.getOffers().get(this).get(currentNegotiation.getOffers().size() - 1);
     }
 
     protected abstract boolean checkOfferLimit(double currentOffer);
