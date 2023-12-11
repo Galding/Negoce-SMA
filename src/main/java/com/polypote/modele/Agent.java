@@ -9,6 +9,7 @@ import lombok.ToString;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -126,7 +127,8 @@ public abstract class Agent extends Thread {
     }
 
     protected double getMyLastOffer() {
-        return currentNegotiation.getOffers().get(this).get(currentNegotiation.getOffers().size() - 1);
+        List<Double> negotiation = currentNegotiation.getOffers().get(this);
+        return negotiation.get(negotiation.size() - 1);
     }
 
     protected abstract boolean checkOfferLimit(double currentOffer);
