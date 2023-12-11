@@ -2,6 +2,7 @@ package com.polypote.modele;
 
 import com.polypote.Negotiation;
 import com.polypote.strategy.HistoryStrategy;
+import com.polypote.strategy.SplitPearStrategy;
 import lombok.Builder;
 
 import java.util.ArrayList;
@@ -28,8 +29,20 @@ public class Supplier extends Agent {
 
     @Override
     public double growth(double offer) {
-        return new HistoryStrategy(true, currentNegotiation, priceLimit, getStartPrice(), getMaxDate(), offer).createOffer();
-//        return Math.round(offer * 1.1 * 100d) / 100d;
+        double percentDifference = Math.abs(offer-getMyLastOffer())/getMyLastOffer()*100;
+        double newOffer = offer;
+        if (percentDifference < 20){
+            return offer*1.1;
+        }
+        else if (percentDifference < 50){
+            return new SplitPearStrategy(false, currentNegotiation, priceLimit, getStartPrice(), getMaxDate(), offer).createOffer();
+        }
+        else if (percentDifference < 100){
+            return offer*1.7;
+        }
+        else{
+            return offer*1.9;
+        }
     }
 
     @Override
