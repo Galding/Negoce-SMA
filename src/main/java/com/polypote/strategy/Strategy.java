@@ -13,7 +13,6 @@ public abstract class Strategy {
     protected double startPrice;
     protected Date maxDate;
     protected double lastOffer;
-    protected int agentQuantity;
 
     public abstract double createOffer();
 }

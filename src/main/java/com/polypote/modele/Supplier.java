@@ -28,7 +28,7 @@ public class Supplier extends Agent {
 
     @Override
     public double growth(double offer) {
-        return new HistoryStrategy(true, currentNegotiation, priceLimit, getStartPrice(), getMaxDate(), offer, 2).createOffer();
+        return new HistoryStrategy(true, currentNegotiation, priceLimit, getStartPrice(), getMaxDate(), offer).createOffer();
 //        return Math.round(offer * 1.1 * 100d) / 100d;
     }
 

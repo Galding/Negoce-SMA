@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 
 
 public class HistoryStrategy extends Strategy {
-    public HistoryStrategy(boolean isSupplier, Negotiation negotiation, double priceLimit, double startPrice, Date maxDate, double lastOffer, int agentQuantity) {
-        super(isSupplier, negotiation, priceLimit, startPrice, maxDate, lastOffer, agentQuantity);
+    public HistoryStrategy(boolean isSupplier, Negotiation negotiation, double priceLimit, double startPrice, Date maxDate, double lastOffer) {
+        super(isSupplier, negotiation, priceLimit, startPrice, maxDate, lastOffer);
     }
 
     @Override

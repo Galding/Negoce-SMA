@@ -9,8 +9,8 @@ import java.util.Date;
 import static com.polypote.Utils.addAPercentageToThePrice;
 
 public class DateStrategy extends Strategy {
-    public DateStrategy(boolean isSupplier, Negotiation negotiation, double priceLimit, double startPrice, Date maxDate, double lastOffer, int agentQuantity) {
-        super(isSupplier, negotiation, priceLimit, startPrice, maxDate, lastOffer, agentQuantity);
+    public DateStrategy(boolean isSupplier, Negotiation negotiation, double priceLimit, double startPrice, Date maxDate, double lastOffer) {
+        super(isSupplier, negotiation, priceLimit, startPrice, maxDate, lastOffer);
     }
 
     @Override

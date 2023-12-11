@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -21,6 +23,7 @@ public abstract class Agent extends Thread {
     private final BlockingDeque<Message> messages = new LinkedBlockingDeque<>();
     private final ReentrantLock lock = new ReentrantLock();
     private final AtomicBoolean isFirstOffer = new AtomicBoolean(true);
+    private final double penalty = 1.1;
     protected double priceLimit;
     @ToString.Exclude
     protected Negotiation currentNegotiation;
@@ -111,6 +114,9 @@ public abstract class Agent extends Thread {
     }
 
     private void rejectOffer(Message currentMessage) {
+        if (this instanceof Negotiator && Date.from(Instant.from(LocalDate.now())).after(maxDate)) {
+            System.out.printf("%s doit payer %s à %s", this, currentMessage.getOffer() * penalty, currentMessage.getSender());
+        }
         Message.builder()
                 .receiver(currentMessage.getSender())
                 .sender(this)

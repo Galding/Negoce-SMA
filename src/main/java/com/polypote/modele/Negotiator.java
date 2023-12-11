@@ -32,7 +32,7 @@ public class Negotiator extends Agent {
 
     @Override
     public double growth(double offer) {
-        return new HistoryStrategy(false, currentNegotiation, priceLimit, getStartPrice(), getMaxDate(), offer, 2).createOffer();
+        return new HistoryStrategy(false, currentNegotiation, priceLimit, getStartPrice(), getMaxDate(), offer).createOffer();
 //        return Math.round(offer * 0.9 * 100d) / 100d;
     }
 
