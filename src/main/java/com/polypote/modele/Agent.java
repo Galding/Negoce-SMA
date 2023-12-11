@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -127,7 +128,7 @@ public abstract class Agent extends Thread {
     }
 
     protected double getMyLastOffer() {
-        List<Double> negotiation = currentNegotiation.getOffers().get(this);
+        List<Double> negotiation = currentNegotiation.getOffers().entrySet().stream().filter(entry -> entry.getKey().getAgentName().equals(agentName)).map(Map.Entry::getValue).findFirst().get();
         return negotiation.get(negotiation.size() - 1);
     }
 
