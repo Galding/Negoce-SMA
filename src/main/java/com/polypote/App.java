@@ -26,7 +26,7 @@ public class App {
                 .build();
         var supplier = Supplier.builder()
                 .startPrice(60)
-                .priceLimit(50)
+                .priceLimit(45)
                 .negotiation(negotiation)
                 .name("Supplier")
                 .build();
